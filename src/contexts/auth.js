@@ -1,6 +1,11 @@
-import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
-import { getUser, signIn as sendSignInRequest } from '../api/auth';
-
+import React, {
+  useState,
+  useEffect,
+  createContext,
+  useContext,
+  useCallback,
+} from "react";
+import { getUser, signIn as sendSignInRequest } from "../api/auth";
 
 function AuthProvider(props) {
   const [user, setUser] = useState();
@@ -12,31 +17,48 @@ function AuthProvider(props) {
       if (result.isOk) {
         setUser(result.data);
       }
-
       setLoading(false);
     })();
   }, []);
 
-  const signIn = useCallback(async (email, password) => {
-    const result = await sendSignInRequest(email, password);
-    if (result.isOk) {
-      setUser(result.data);
-    }
+  const signIn = useCallback(
+    async (userName, password, maTinh, maHuyen, maXa) => {
+      const result = await sendSignInRequest(
+        userName,
+        password,
+        maTinh,
+        maHuyen,
+        maXa
+      );
+      if (result.isOk) {
+        console.log("check Token ->", result.data.AccessToken);
+        localStorage.setItem("AccessToken", await result.data.AccessToken);
+        setUser({
+          userName: userName,
+          maTinh: maTinh,
+          maHuyen: maHuyen,
+          maXa: maXa,
+        });
+      }
 
-    return result;
-  }, []);
+      return result;
+    },
+    []
+  );
 
   const signOut = useCallback(() => {
-    setUser(undefined);
+    localStorage.clear();
   }, []);
 
-
   return (
-    <AuthContext.Provider value={{ user, signIn, signOut, loading }} {...props} />
+    <AuthContext.Provider
+      value={{ user, signIn, signOut, loading }}
+      {...props}
+    />
   );
 }
 
 const AuthContext = createContext({ loading: false });
 const useAuth = () => useContext(AuthContext);
 
-export { AuthProvider, useAuth }
+export { AuthProvider, useAuth };

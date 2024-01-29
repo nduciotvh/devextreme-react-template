@@ -24,6 +24,19 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
+    <script>
+      const broadcastMessage = (message) => {
+        const channel = new BroadcastChannel("auth_channel");
+        channel.postMessage(message);
+      };
+      // In each tab
+      const channel = new BroadcastChannel("auth_channel");
+      channel.onmessage = (event) => {
+        const { type, payload } = event.data;
+        console.log(">>>", event);
+        // Update authentication state based on the received message
+      };
+    </script>
     <title>DevExtreme App</title>
   </head>
   <body class="dx-viewport">

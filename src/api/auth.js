@@ -1,52 +1,62 @@
-import defaultUser from '../utils/default-user';
-
-export async function signIn(email, password) {
+import axiosClient from "./customize-axios";
+export async function signIn(username, password, ma_tinh, ma_huyen, ma_xa) {
   try {
-    // Send request
-    console.log(email, password);
-
+    const res = await axiosClient.post("/login", {
+      username,
+      password,
+      ma_tinh,
+      ma_huyen,
+      ma_xa,
+    });
+    console.log("---res on login", res);
     return {
       isOk: true,
-      data: defaultUser
+      data: res.Data,
+      message: "Đăng nhập thành công",
     };
-  }
-  catch {
+  } catch (error) {
     return {
       isOk: false,
-      message: "Authentication failed"
+      message: "Tài khoản hoặc mật khẩu không đúng",
+    };
+  }
+}
+
+export async function signOut(refreshToken) {
+  try {
+    const res = await axiosClient.post("/logout", {
+      refreshToken,
+    });
+    //localStorage.clear();
+    return {
+      isOk: true,
+      data: res.Data,
+      message: "Đăng xuất thành công",
+    };
+  } catch {
+    return {
+      isOk: false,
+      message: "Đăng xuất không thành công",
     };
   }
 }
 
 export async function getUser() {
   try {
-    // Send request
-
-    return {
-      isOk: true,
-      data: defaultUser
-    };
-  }
-  catch {
-    return {
-      isOk: false
-    };
-  }
-}
-
-export async function createAccount(email, password) {
-  try {
-    // Send request
-    console.log(email, password);
-
-    return {
-      isOk: true
-    };
-  }
-  catch {
+    if (localStorage.getItem("AccessToken") !== null) {
+      return {
+        isOk: true,
+        data: "",
+      };
+    } else {
+      return {
+        isOk: true,
+        data: "",
+      };
+    }
+  } catch {
     return {
       isOk: false,
-      message: "Failed to create account"
     };
   }
 }
@@ -57,14 +67,13 @@ export async function changePassword(email, recoveryCode) {
     console.log(email, recoveryCode);
 
     return {
-      isOk: true
+      isOk: true,
     };
-  }
-  catch {
+  } catch {
     return {
       isOk: false,
-      message: "Failed to change password"
-    }
+      message: "Failed to change password",
+    };
   }
 }
 
@@ -74,13 +83,12 @@ export async function resetPassword(email) {
     console.log(email);
 
     return {
-      isOk: true
+      isOk: true,
     };
-  }
-  catch {
+  } catch {
     return {
       isOk: false,
-      message: "Failed to reset password"
+      message: "Failed to reset password",
     };
   }
 }

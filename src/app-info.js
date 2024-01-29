@@ -1,5 +1,4 @@
 const appInfo = {
-    title: 'DevExtreme App'
+  title: "Phổ cập Giáo dục",
 };
 export default appInfo;
-

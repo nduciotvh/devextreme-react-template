@@ -1,24 +1,23 @@
-import 'devextreme/dist/css/dx.common.css';
-import './themes/generated/theme.base.css';
-import './themes/generated/theme.additional.css';
-import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
-import './dx-styles.scss';
-import LoadPanel from 'devextreme-react/load-panel';
-import { NavigationProvider } from './contexts/navigation';
-import { AuthProvider, useAuth } from './contexts/auth';
-import { useScreenSizeClass } from './utils/media-query';
-import Content from './Content';
-import UnauthenticatedContent from './UnauthenticatedContent';
+import "devextreme/dist/css/dx.common.css";
+import "./themes/generated/theme.base.css";
+import "./themes/generated/theme.additional.css";
+import React from "react";
+import { BrowserRouter as Router } from "react-router-dom";
+import "./dx-styles.scss";
+import LoadPanel from "devextreme-react/load-panel";
+import { NavigationProvider } from "./contexts/navigation";
+import { AuthProvider, useAuth } from "./contexts/auth";
+import { useScreenSizeClass } from "./utils/media-query";
+import Content from "./Content";
+import UnauthenticatedContent from "./UnauthenticatedContent";
 
 function App() {
   const { user, loading } = useAuth();
-
   if (loading) {
-    return <LoadPanel visible={true} />;
+    return <LoadPanel visible={false} />;
   }
-
-  if (user) {
+  console.log(">>>", localStorage.getItem("AccessToken"));
+  if (localStorage.getItem("AccessToken")) {
     return <Content />;
   }
 
